@@ -55,7 +55,7 @@
     return toHex(rgb);
   };
 
-  $.fn.tagcloud = function (options) {
+  $.fn.tagcloud = function (options, width) {
     var opts = $.extend({}, $.fn.tagcloud.defaults, options);
     var tagWeights = this.map(function () {
       return $(this).attr("rel");
@@ -77,10 +77,14 @@
     }
 
     // Sizes
-    var fontIncr, colorIncr;
+    var fontIncr, fontRel = 1, colorIncr;
     if (opts.size) {
       fontIncr = (opts.size.end - opts.size.start) / range;
     }
+    if (opts.width && width !== undefined) {
+      fontRel = (width / opts.width);
+    }
+
     // Colors
     if (opts.color) {
       colorIncr = colorIncrement(opts.color, range);
@@ -88,7 +92,7 @@
     return this.each(function () {
       var weighting = $(this).attr("rel");
       if (opts.size) {
-        $(this).css({"font-size": opts.size.start + (weighting * fontIncr) + opts.size.unit});
+        $(this).css({"font-size": ((opts.size.start + (weighting * fontIncr)) * fontRel) + opts.size.unit});
       }
       if (opts.color) {
         $(this).css({"color": tagColor(opts.color, colorIncr, weighting)});
