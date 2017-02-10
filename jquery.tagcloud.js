@@ -92,7 +92,13 @@
     return this.each(function () {
       var weighting = $(this).attr("rel");
       if (opts.size) {
-        $(this).css({"font-size": ((opts.size.start + (weighting * fontIncr)) * fontRel) + opts.size.unit});
+        var size = opts.size.start;
+        size = ((opts.size.start + (weighting * fontIncr)) * fontRel);
+        if (size > opts.size.end) {
+          size = opts.size.end;
+        }
+
+        $(this).css({"font-size": size + opts.size.unit});
       }
       if (opts.color) {
         $(this).css({"color": tagColor(opts.color, colorIncr, weighting)});
